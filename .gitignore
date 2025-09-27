@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/lib/generated/prisma
+
+# Development and testing files
+dev.db
+*.db
+*.sqlite
+cookies.txt
+test-password.js
+plan.md
+tasks.md
+spec.md
+AUDIT.md
+
+# Playwright and MCP
+.playwright-mcp/
+.mcp.json

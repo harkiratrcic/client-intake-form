@@ -1,0 +1,180 @@
+{
+  "name": "Document Checklist",
+  "slug": "document-checklist",
+  "description": "Checklist of required documents for immigration application",
+  "fieldSchema": {
+    "type": "object",
+    "title": "Document Checklist",
+    "description": "Please confirm which documents you have available and ready to submit",
+    "properties": {
+      "personalDocuments": {
+        "type": "object",
+        "title": "Personal Documents",
+        "properties": {
+          "passport": {
+            "type": "boolean",
+            "title": "Valid Passport",
+            "description": "Current passport with at least 6 months validity"
+          },
+          "birthCertificate": {
+            "type": "boolean",
+            "title": "Birth Certificate",
+            "description": "Official birth certificate or equivalent"
+          },
+          "marriageCertificate": {
+            "type": "boolean",
+            "title": "Marriage Certificate (if applicable)",
+            "description": "Official marriage certificate if married"
+          },
+          "divorceDecree": {
+            "type": "boolean",
+            "title": "Divorce Decree (if applicable)",
+            "description": "Official divorce decree if previously married"
+          },
+          "photographs": {
+            "type": "boolean",
+            "title": "Passport Photos",
+            "description": "Recent passport-style photographs meeting specifications"
+          }
+        }
+      },
+      "educationDocuments": {
+        "type": "object",
+        "title": "Education Documents",
+        "properties": {
+          "highSchoolDiploma": {
+            "type": "boolean",
+            "title": "High School Diploma/Certificate",
+            "description": "Secondary school completion certificate"
+          },
+          "universityDegrees": {
+            "type": "boolean",
+            "title": "University/College Degrees",
+            "description": "All post-secondary diplomas and degrees"
+          },
+          "transcripts": {
+            "type": "boolean",
+            "title": "Official Transcripts",
+            "description": "Official academic transcripts from all institutions"
+          },
+          "credentialAssessment": {
+            "type": "boolean",
+            "title": "Educational Credential Assessment (ECA)",
+            "description": "ECA report from designated organization if required"
+          }
+        }
+      },
+      "workDocuments": {
+        "type": "object",
+        "title": "Work Experience Documents",
+        "properties": {
+          "employmentLetters": {
+            "type": "boolean",
+            "title": "Employment Reference Letters",
+            "description": "Letters from current and previous employers"
+          },
+          "payStubs": {
+            "type": "boolean",
+            "title": "Pay Stubs/Salary Slips",
+            "description": "Recent pay stubs or salary certificates"
+          },
+          "workPermits": {
+            "type": "boolean",
+            "title": "Work Permits (if applicable)",
+            "description": "Current or previous work permits"
+          },
+          "professionalLicenses": {
+            "type": "boolean",
+            "title": "Professional Licenses/Certifications",
+            "description": "Relevant professional licenses or certifications"
+          }
+        }
+      },
+      "languageDocuments": {
+        "type": "object",
+        "title": "Language Proficiency Documents",
+        "properties": {
+          "ieltsResults": {
+            "type": "boolean",
+            "title": "IELTS Test Results",
+            "description": "Valid IELTS test results if applicable"
+          },
+          "celpipResults": {
+            "type": "boolean",
+            "title": "CELPIP Test Results",
+            "description": "Valid CELPIP test results if applicable"
+          },
+          "tefResults": {
+            "type": "boolean",
+            "title": "TEF Test Results",
+            "description": "Valid TEF test results for French if applicable"
+          }
+        }
+      },
+      "financialDocuments": {
+        "type": "object",
+        "title": "Financial Documents",
+        "properties": {
+          "bankStatements": {
+            "type": "boolean",
+            "title": "Bank Statements",
+            "description": "Recent bank statements showing proof of funds"
+          },
+          "investmentStatements": {
+            "type": "boolean",
+            "title": "Investment Statements",
+            "description": "Investment account statements if applicable"
+          },
+          "employmentOffer": {
+            "type": "boolean",
+            "title": "Job Offer Letter",
+            "description": "Valid job offer from Canadian employer if applicable"
+          },
+          "lmia": {
+            "type": "boolean",
+            "title": "LMIA (if applicable)",
+            "description": "Labour Market Impact Assessment if required"
+          }
+        }
+      },
+      "additionalNotes": {
+        "type": "string",
+        "title": "Additional Notes",
+        "description": "Any additional information about document availability or special circumstances",
+        "maxLength": 1000
+      }
+    },
+    "required": ["personalDocuments", "educationDocuments"]
+  },
+  "uiSchema": {
+    "ui:order": [
+      "personalDocuments",
+      "educationDocuments",
+      "workDocuments",
+      "languageDocuments",
+      "financialDocuments",
+      "additionalNotes"
+    ],
+    "personalDocuments": {
+      "ui:order": ["passport", "birthCertificate", "marriageCertificate", "divorceDecree", "photographs"]
+    },
+    "educationDocuments": {
+      "ui:order": ["highSchoolDiploma", "universityDegrees", "transcripts", "credentialAssessment"]
+    },
+    "workDocuments": {
+      "ui:order": ["employmentLetters", "payStubs", "workPermits", "professionalLicenses"]
+    },
+    "languageDocuments": {
+      "ui:order": ["ieltsResults", "celpipResults", "tefResults"]
+    },
+    "financialDocuments": {
+      "ui:order": ["bankStatements", "investmentStatements", "employmentOffer", "lmia"]
+    },
+    "additionalNotes": {
+      "ui:widget": "textarea",
+      "ui:options": {
+        "rows": 4
+      }
+    }
+  }
+}

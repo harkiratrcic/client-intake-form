@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Core user/owner table
+model Owner {
+  id             String         @id @default(uuid())
+  email          String         @unique
+  passwordHash   String         @map("password_hash")
+  businessName   String?        @map("business_name")
+  rcicNumber     String?        @map("rcic_number")
+  contactPhone   String?        @map("contact_phone")
+  contactAddress String?        @map("contact_address")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  lastLoginAt    DateTime?      @map("last_login_at")
+  isActive       Boolean        @default(true) @map("is_active")
+
+  formInstances  FormInstance[]
+  sessions       Session[]
+  clients        Client[]
+
+  @@map("owners")
+}
+
+// Client model for managing immigration clients
+model Client {
+  id             String         @id @default(uuid())
+  ownerId        String         @map("owner_id")
+  firstName      String         @map("first_name")
+  lastName       String         @map("last_name")
+  email          String
+  phone          String?
+  dateOfBirth    DateTime?      @map("date_of_birth")
+  nationality    String?
+  passportNumber String?        @map("passport_number")
+  currentStatus  String?        @map("current_status")
+  address        String?
+  city           String?
+  province       String?
+  postalCode     String?        @map("postal_code")
+  country        String?
+  notes          String?
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  owner          Owner          @relation(fields: [ownerId], references: [id])
+
+  @@unique([ownerId, email])
+  @@index([ownerId, createdAt(sort: Desc)])
+  @@map("clients")
+}
+
+// Form templates (seeded data)
+model FormTemplate {
+  id           String         @id @default(uuid())
+  name         String
+  slug         String         @unique
+  description  String?
+  fieldSchema  Json           @map("field_schema") // JSON Schema definition
+  uiSchema     Json?          @map("ui_schema") // UI hints for rendering
+  version      Int            @default(1)
+  isActive     Boolean        @default(true) @map("is_active")
+  createdAt    DateTime       @default(now()) @map("created_at")
+
+  formInstances FormInstance[]
+
+  @@map("form_templates")
+}
+
+// Form instances (sent forms)
+model FormInstance {
+  id              String        @id @default(uuid())
+  templateId      String        @map("template_id")
+  ownerId         String        @map("owner_id")
+  clientEmail     String        @map("client_email")
+  secureToken     String        @unique @map("secure_token")
+  personalMessage String?       @map("personal_message")
+  status          FormStatus    @default(SENT)
+  expiresAt       DateTime      @map("expires_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  openedAt        DateTime?     @map("opened_at")
+  submittedAt     DateTime?     @map("submitted_at")
+
+  template        FormTemplate  @relation(fields: [templateId], references: [id])
+  owner           Owner         @relation(fields: [ownerId], references: [id])
+  response        FormResponse?
+
+  @@index([secureToken])
+  @@index([status, expiresAt])
+  @@index([ownerId, createdAt(sort: Desc)])
+  @@map("form_instances")
+}
+
+// Form responses (drafts + submissions)
+model FormResponse {
+  id               String        @id @default(uuid())
+  instanceId       String        @unique @map("instance_id")
+  draftData        Json?         @map("draft_data") // Auto-saved data
+  submittedData    Json?         @map("submitted_data") // Final submission
+  submissionId     String?       @map("submission_id") // Unique submission reference
+  lastSavedAt      DateTime?     @map("last_saved_at")
+  submittedAt      DateTime?     @map("submitted_at")
+  submissionIp     String?       @map("submission_ip")
+  submissionUserAgent String?    @map("submission_user_agent")
+
+  instance         FormInstance  @relation(fields: [instanceId], references: [id])
+
+  @@index([instanceId])
+  @@index([submissionId])
+  @@map("form_responses")
+}
+
+// Audit log for compliance
+model AuditLog {
+  id         String   @id @default(uuid())
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  action     String
+  actorType  ActorType @map("actor_type")
+  actorId    String?  @map("actor_id") // owner_id or client_email
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  metadata   Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@index([createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+// Sessions for auth
+model Session {
+  id             String   @id @default(uuid())
+  ownerId        String   @map("owner_id")
+  tokenHash      String   @unique @map("token_hash")
+  expiresAt      DateTime @map("expires_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+  lastActivityAt DateTime @default(now()) @map("last_activity_at")
+  ipAddress      String?  @map("ip_address")
+  userAgent      String?  @map("user_agent")
+
+  owner          Owner    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([tokenHash])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+// Enums
+enum FormStatus {
+  SENT
+  IN_PROGRESS
+  COMPLETED
+  EXPIRED
+
+  @@map("form_status")
+}
+
+enum ActorType {
+  OWNER
+  CLIENT
+  SYSTEM
+
+  @@map("actor_type")
+}

@@ -1,0 +1,295 @@
+{
+  "name": "Initial Assessment",
+  "slug": "initial-assessment",
+  "description": "Initial assessment form to determine immigration eligibility and pathway options",
+  "fieldSchema": {
+    "type": "object",
+    "title": "Initial Immigration Assessment",
+    "description": "This assessment helps us understand your background and determine the best immigration pathway for you",
+    "properties": {
+      "immigrationGoals": {
+        "type": "object",
+        "title": "Immigration Goals",
+        "properties": {
+          "primaryGoal": {
+            "type": "string",
+            "title": "Primary Immigration Goal",
+            "enum": [
+              "permanent_residence",
+              "temporary_work",
+              "study_permit",
+              "visitor_visa",
+              "family_reunification",
+              "business_immigration",
+              "refugee_protection"
+            ],
+            "enumNames": [
+              "Permanent Residence",
+              "Temporary Work Permit",
+              "Study Permit",
+              "Visitor Visa",
+              "Family Reunification",
+              "Business/Investment Immigration",
+              "Refugee Protection"
+            ]
+          },
+          "timeframe": {
+            "type": "string",
+            "title": "Desired Timeframe",
+            "enum": ["immediate", "3_months", "6_months", "1_year", "flexible"],
+            "enumNames": ["Immediate", "Within 3 months", "Within 6 months", "Within 1 year", "Flexible"]
+          },
+          "preferredProvince": {
+            "type": "string",
+            "title": "Preferred Province/Territory",
+            "enum": [
+              "alberta", "british_columbia", "manitoba", "new_brunswick",
+              "newfoundland_labrador", "northwest_territories", "nova_scotia",
+              "nunavut", "ontario", "prince_edward_island", "quebec",
+              "saskatchewan", "yukon", "no_preference"
+            ],
+            "enumNames": [
+              "Alberta", "British Columbia", "Manitoba", "New Brunswick",
+              "Newfoundland and Labrador", "Northwest Territories", "Nova Scotia",
+              "Nunavut", "Ontario", "Prince Edward Island", "Quebec",
+              "Saskatchewan", "Yukon", "No Preference"
+            ]
+          }
+        },
+        "required": ["primaryGoal", "timeframe"]
+      },
+      "personalBackground": {
+        "type": "object",
+        "title": "Personal Background",
+        "properties": {
+          "age": {
+            "type": "integer",
+            "title": "Age",
+            "minimum": 16,
+            "maximum": 100
+          },
+          "countryOfBirth": {
+            "type": "string",
+            "title": "Country of Birth"
+          },
+          "currentCountry": {
+            "type": "string",
+            "title": "Current Country of Residence"
+          },
+          "familyMembers": {
+            "type": "array",
+            "title": "Family Members Included in Application",
+            "items": {
+              "type": "object",
+              "properties": {
+                "relationship": {
+                  "type": "string",
+                  "title": "Relationship",
+                  "enum": ["spouse", "child", "dependent", "parent", "grandparent"],
+                  "enumNames": ["Spouse/Partner", "Child", "Dependent", "Parent", "Grandparent"]
+                },
+                "age": {
+                  "type": "integer",
+                  "title": "Age",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              },
+              "required": ["relationship", "age"]
+            }
+          }
+        },
+        "required": ["age", "countryOfBirth", "currentCountry"]
+      },
+      "education": {
+        "type": "object",
+        "title": "Education Background",
+        "properties": {
+          "highestEducation": {
+            "type": "string",
+            "title": "Highest Level of Education",
+            "enum": [
+              "less_than_high_school",
+              "high_school",
+              "trade_certificate",
+              "college_diploma",
+              "bachelor_degree",
+              "master_degree",
+              "phd_degree"
+            ],
+            "enumNames": [
+              "Less than High School",
+              "High School Diploma",
+              "Trade Certificate/Diploma",
+              "College Diploma (2-3 years)",
+              "Bachelor's Degree",
+              "Master's Degree",
+              "PhD/Doctorate"
+            ]
+          },
+          "fieldOfStudy": {
+            "type": "string",
+            "title": "Primary Field of Study"
+          },
+          "countryOfEducation": {
+            "type": "string",
+            "title": "Country Where Education Was Completed"
+          },
+          "canadianEducation": {
+            "type": "boolean",
+            "title": "Do you have any Canadian education credentials?"
+          }
+        },
+        "required": ["highestEducation", "fieldOfStudy", "countryOfEducation"]
+      },
+      "workExperience": {
+        "type": "object",
+        "title": "Work Experience",
+        "properties": {
+          "yearsOfExperience": {
+            "type": "integer",
+            "title": "Total Years of Work Experience",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "currentOccupation": {
+            "type": "string",
+            "title": "Current/Most Recent Occupation"
+          },
+          "industryExperience": {
+            "type": "array",
+            "title": "Industries You Have Worked In",
+            "items": {
+              "type": "string",
+              "enum": [
+                "technology", "healthcare", "education", "finance", "engineering",
+                "trades", "hospitality", "retail", "manufacturing", "agriculture",
+                "transportation", "arts_media", "legal", "social_services", "other"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "canadianWorkExperience": {
+            "type": "integer",
+            "title": "Years of Canadian Work Experience",
+            "minimum": 0,
+            "maximum": 20
+          }
+        },
+        "required": ["yearsOfExperience", "currentOccupation"]
+      },
+      "languageSkills": {
+        "type": "object",
+        "title": "Language Skills",
+        "properties": {
+          "englishProficiency": {
+            "type": "string",
+            "title": "English Proficiency Level",
+            "enum": ["native", "advanced", "intermediate", "basic", "none"],
+            "enumNames": ["Native/Fluent", "Advanced", "Intermediate", "Basic", "None"]
+          },
+          "frenchProficiency": {
+            "type": "string",
+            "title": "French Proficiency Level",
+            "enum": ["native", "advanced", "intermediate", "basic", "none"],
+            "enumNames": ["Native/Fluent", "Advanced", "Intermediate", "Basic", "None"]
+          },
+          "hasLanguageTests": {
+            "type": "boolean",
+            "title": "Have you taken any official language tests (IELTS, CELPIP, TEF)?"
+          }
+        },
+        "required": ["englishProficiency", "frenchProficiency"]
+      },
+      "additionalInformation": {
+        "type": "object",
+        "title": "Additional Information",
+        "properties": {
+          "previousApplications": {
+            "type": "boolean",
+            "title": "Have you previously applied for Canadian immigration?"
+          },
+          "refusals": {
+            "type": "boolean",
+            "title": "Have you ever been refused a visa or permit for Canada?"
+          },
+          "criminalHistory": {
+            "type": "boolean",
+            "title": "Do you have any criminal convictions or charges?"
+          },
+          "medicalConditions": {
+            "type": "boolean",
+            "title": "Do you have any serious medical conditions that might affect your application?"
+          },
+          "additionalComments": {
+            "type": "string",
+            "title": "Additional Comments or Questions",
+            "description": "Please share any additional information that might be relevant to your case",
+            "maxLength": 2000
+          }
+        }
+      }
+    },
+    "required": ["immigrationGoals", "personalBackground", "education", "workExperience", "languageSkills"]
+  },
+  "uiSchema": {
+    "ui:order": [
+      "immigrationGoals",
+      "personalBackground",
+      "education",
+      "workExperience",
+      "languageSkills",
+      "additionalInformation"
+    ],
+    "immigrationGoals": {
+      "ui:order": ["primaryGoal", "timeframe", "preferredProvince"],
+      "primaryGoal": {
+        "ui:widget": "select"
+      },
+      "timeframe": {
+        "ui:widget": "select"
+      },
+      "preferredProvince": {
+        "ui:widget": "select"
+      }
+    },
+    "personalBackground": {
+      "ui:order": ["age", "countryOfBirth", "currentCountry", "familyMembers"],
+      "familyMembers": {
+        "ui:options": {
+          "addLabel": "Add Family Member"
+        }
+      }
+    },
+    "education": {
+      "ui:order": ["highestEducation", "fieldOfStudy", "countryOfEducation", "canadianEducation"],
+      "highestEducation": {
+        "ui:widget": "select"
+      }
+    },
+    "workExperience": {
+      "ui:order": ["yearsOfExperience", "currentOccupation", "industryExperience", "canadianWorkExperience"],
+      "industryExperience": {
+        "ui:widget": "checkboxes"
+      }
+    },
+    "languageSkills": {
+      "ui:order": ["englishProficiency", "frenchProficiency", "hasLanguageTests"],
+      "englishProficiency": {
+        "ui:widget": "select"
+      },
+      "frenchProficiency": {
+        "ui:widget": "select"
+      }
+    },
+    "additionalInformation": {
+      "ui:order": ["previousApplications", "refusals", "criminalHistory", "medicalConditions", "additionalComments"],
+      "additionalComments": {
+        "ui:widget": "textarea",
+        "ui:options": {
+          "rows": 5
+        }
+      }
+    }
+  }
+}

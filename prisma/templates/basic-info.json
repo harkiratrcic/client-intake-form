@@ -1,0 +1,135 @@
+{
+  "name": "Basic Information",
+  "slug": "basic-info",
+  "description": "Collect basic personal and contact information from clients",
+  "fieldSchema": {
+    "type": "object",
+    "title": "Basic Information Form",
+    "description": "Please provide your basic personal and contact information",
+    "properties": {
+      "fullName": {
+        "type": "string",
+        "title": "Full Legal Name",
+        "description": "Enter your full legal name as it appears on official documents",
+        "minLength": 2,
+        "maxLength": 100
+      },
+      "email": {
+        "type": "string",
+        "title": "Email Address",
+        "description": "Primary email address for communication",
+        "format": "email"
+      },
+      "phone": {
+        "type": "string",
+        "title": "Phone Number",
+        "description": "Primary contact phone number",
+        "pattern": "^[+]?[1-9]?[0-9]{7,15}$"
+      },
+      "dateOfBirth": {
+        "type": "string",
+        "title": "Date of Birth",
+        "description": "Your date of birth",
+        "format": "date"
+      },
+      "nationality": {
+        "type": "string",
+        "title": "Nationality",
+        "description": "Your current nationality/citizenship",
+        "minLength": 2,
+        "maxLength": 50
+      },
+      "currentAddress": {
+        "type": "object",
+        "title": "Current Address",
+        "properties": {
+          "street": {
+            "type": "string",
+            "title": "Street Address"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "province": {
+            "type": "string",
+            "title": "Province/State"
+          },
+          "postalCode": {
+            "type": "string",
+            "title": "Postal/ZIP Code"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country"
+          }
+        },
+        "required": ["street", "city", "country"]
+      },
+      "maritalStatus": {
+        "type": "string",
+        "title": "Marital Status",
+        "enum": ["Single", "Married", "Common-law", "Divorced", "Widowed", "Separated"],
+        "enumNames": ["Single", "Married", "Common-law", "Divorced", "Widowed", "Separated"]
+      },
+      "emergencyContact": {
+        "type": "object",
+        "title": "Emergency Contact",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "relationship": {
+            "type": "string",
+            "title": "Relationship"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone Number"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email Address",
+            "format": "email"
+          }
+        },
+        "required": ["name", "relationship", "phone"]
+      }
+    },
+    "required": ["fullName", "email", "phone", "dateOfBirth", "nationality", "currentAddress", "maritalStatus"]
+  },
+  "uiSchema": {
+    "ui:order": [
+      "fullName",
+      "email",
+      "phone",
+      "dateOfBirth",
+      "nationality",
+      "maritalStatus",
+      "currentAddress",
+      "emergencyContact"
+    ],
+    "currentAddress": {
+      "ui:order": ["street", "city", "province", "postalCode", "country"]
+    },
+    "emergencyContact": {
+      "ui:order": ["name", "relationship", "phone", "email"]
+    },
+    "fullName": {
+      "ui:placeholder": "e.g., John Michael Smith"
+    },
+    "email": {
+      "ui:placeholder": "e.g., john.smith@email.com"
+    },
+    "phone": {
+      "ui:placeholder": "e.g., +1-555-123-4567"
+    },
+    "dateOfBirth": {
+      "ui:widget": "date"
+    },
+    "maritalStatus": {
+      "ui:widget": "select"
+    }
+  }
+}
