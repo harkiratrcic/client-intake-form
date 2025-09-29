@@ -1,0 +1,17 @@
+{
+  "buildCommand": "npx prisma generate && npx prisma db push && npm run db:seed && npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "JWT_SECRET": "@jwt_secret",
+    "RESEND_API_KEY": "@resend_api_key",
+    "EMAIL_FROM": "@email_from",
+    "NEXT_PUBLIC_BASE_URL": "@next_public_base_url"
+  },
+  "build": {
+    "env": {
+      "DATABASE_URL": "@database_url"
+    }
+  }
+}
