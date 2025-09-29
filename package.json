@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npx prisma generate && npx prisma db push && npm run db:seed:prod && next build --turbopack",
+    "build": "npx prisma generate && next build --turbopack",
     "start": "next start",
-    "postbuild": "npm run db:seed:prod",
     "lint": "eslint",
     "test": "jest",
     "test:watch": "jest --watch",
