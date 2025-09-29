@@ -80,7 +80,17 @@ export async function POST(request: NextRequest) {
 
     // Generate form URL
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
+    // Warn if using default URL in production
+    if (!process.env.NEXT_PUBLIC_APP_URL && process.env.NODE_ENV === 'production') {
+      console.error('⚠️ NEXT_PUBLIC_APP_URL is not set! Forms will have incorrect URLs in production.');
+      console.error('⚠️ Please set NEXT_PUBLIC_APP_URL in your Vercel environment variables.');
+    }
+
     const formUrl = `${baseUrl}/f/${result.instance.secureToken}`;
+
+    // Log form URL for debugging
+    console.log('📧 Form URL generated:', formUrl);
 
     // Get owner info for email
     const owner = await prisma.owner.findUnique({

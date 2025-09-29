@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { FormPageClient } from './form-client';
+import { prisma } from '@/lib/prisma';
 
 interface FormInstance {
   id: string;
@@ -23,43 +24,46 @@ interface FormInstance {
 
 async function getFormInstance(token: string): Promise<FormInstance | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
-    // Fetch form instance
-    const formResponse = await fetch(`${baseUrl}/api/forms/${token}`, {
-      cache: 'no-store',
+    // Access database directly instead of making HTTP request
+    const formInstance = await prisma.formInstance.findUnique({
+      where: { secureToken: token },
+      include: {
+        template: true,
+        owner: {
+          select: {
+            id: true,
+            businessName: true,
+            email: true,
+            rcicNumber: true,
+          },
+        },
+        response: true,
+      },
     });
 
-    if (!formResponse.ok) {
-      if (formResponse.status === 404) {
-        return null;
-      }
-      throw new Error(`Failed to fetch form: ${formResponse.status}`);
+    if (!formInstance) {
+      return null;
     }
 
-    const formInstance = await formResponse.json();
-
-    // Fetch draft data if form is not completed
-    if (formInstance.status !== 'submitted') {
-      try {
-        const draftResponse = await fetch(`${baseUrl}/api/forms/${token}/draft`, {
-          cache: 'no-store',
-        });
-
-        if (draftResponse.ok) {
-          const draftResult = await draftResponse.json();
-
-          // Merge draft data with form data if draft exists
-          if (draftResult.draftData && Object.keys(draftResult.draftData).length > 0) {
-            formInstance.formData = { ...formInstance.formData, ...draftResult.draftData };
-          }
-        }
-      } catch (draftError) {
-        console.warn('Failed to fetch draft data, using original form data:', draftError);
-      }
-    }
-
-    return formInstance;
+    return {
+      id: formInstance.id,
+      token: formInstance.secureToken,
+      status: formInstance.status,
+      formData: formInstance.response?.draftData || {},
+      expiresAt: formInstance.expiresAt.toISOString(),
+      template: {
+        id: formInstance.template.id,
+        name: formInstance.template.name,
+        schema: formInstance.template.fieldSchema,
+        uiSchema: formInstance.template.uiSchema,
+      },
+      owner: {
+        id: formInstance.owner.id,
+        name: formInstance.owner.businessName || 'FormFlow User',
+        email: formInstance.owner.email,
+        rcicNumber: formInstance.owner.rcicNumber || '',
+      },
+    };
   } catch (error) {
     console.error('Error fetching form instance:', error);
     return null;
