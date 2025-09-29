@@ -79,8 +79,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate form URL
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const formUrl = `${baseUrl}/forms/${result.instance.secureToken}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const formUrl = `${baseUrl}/f/${result.instance.secureToken}`;
 
     // Get owner info for email
     const owner = await prisma.owner.findUnique({

@@ -23,7 +23,7 @@ interface FormInstance {
 
 async function getFormInstance(token: string): Promise<FormInstance | null> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
     // Fetch form instance
     const formResponse = await fetch(`${baseUrl}/api/forms/${token}`, {

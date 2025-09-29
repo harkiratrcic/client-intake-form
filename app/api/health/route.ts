@@ -11,11 +11,13 @@ export async function GET(request: NextRequest) {
     // Test database connection
     const dbTest = await prisma.$queryRaw`SELECT 1 as test`;
 
-    // Check table existence
+    // Check table existence (PostgreSQL compatible)
     const tables = await prisma.$queryRaw`
-      SELECT name FROM sqlite_master
-      WHERE type='table' AND name NOT LIKE 'sqlite_%'
-      ORDER BY name
+      SELECT table_name as name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+      AND table_type = 'BASE TABLE'
+      ORDER BY table_name
     ` as Array<{ name: string }>;
 
     // Count records in key tables
