@@ -4,25 +4,16 @@ import { getSession } from '@/lib/auth/get-session';
 
 export async function GET(request: NextRequest) {
   try {
-    // TEMP: Skip authentication for testing
-    console.log('🚀 Fetching clients - skipping auth for testing');
-    // const sessionResult = await getSession(request);
-    // if (!sessionResult.success) {
-    //   return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    // }
-
-    // Get owner from database for testing
-    const testOwner = await prisma.owner.findFirst({
-      where: { email: 'owner@test.com' }
-    });
-    if (!testOwner) {
-      return NextResponse.json({ error: 'Test owner not found' }, { status: 500 });
+    // Get authenticated session
+    const sessionResult = await getSession(request);
+    if (!sessionResult.success) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
     // Get all clients for this owner
     const clients = await prisma.client.findMany({
       where: {
-        ownerId: testOwner.id,
+        ownerId: sessionResult.owner.id,
       },
       orderBy: {
         createdAt: 'desc',
@@ -42,19 +33,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // TEMP: Skip authentication for testing
-    console.log('🚀 Creating client - skipping auth for testing');
-    // const sessionResult = await getSession(request);
-    // if (!sessionResult.success) {
-    //   return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    // }
-
-    // Get owner from database for testing
-    const testOwner = await prisma.owner.findFirst({
-      where: { email: 'owner@test.com' }
-    });
-    if (!testOwner) {
-      return NextResponse.json({ error: 'Test owner not found' }, { status: 500 });
+    // Get authenticated session
+    const sessionResult = await getSession(request);
+    if (!sessionResult.success) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
     // Parse request body
@@ -87,7 +69,7 @@ export async function POST(request: NextRequest) {
     // Check if client with this email already exists for this owner
     const existingClient = await prisma.client.findFirst({
       where: {
-        ownerId: testOwner.id,
+        ownerId: sessionResult.owner.id,
         email,
       },
     });
@@ -102,7 +84,7 @@ export async function POST(request: NextRequest) {
     // Create the client
     const client = await prisma.client.create({
       data: {
-        ownerId: testOwner.id,
+        ownerId: sessionResult.owner.id,
         firstName,
         lastName,
         email,
@@ -127,7 +109,7 @@ export async function POST(request: NextRequest) {
         entityId: client.id,
         action: 'client_created',
         actorType: 'OWNER',
-        actorId: testOwner.id,
+        actorId: sessionResult.owner.id,
         ipAddress: request.headers.get('x-forwarded-for') ||
                   request.headers.get('x-real-ip') ||
                   'unknown',
