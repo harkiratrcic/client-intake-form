@@ -7,6 +7,7 @@ const PROTECTED_PATHS = [
   '/api/forms',
   '/api/submissions',
   '/api/templates', // Only if we want to protect template access
+  '/api/clients', // Protect client management endpoints
   '/api/export',
 ];
 
