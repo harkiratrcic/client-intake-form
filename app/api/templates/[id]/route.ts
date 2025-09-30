@@ -12,7 +12,7 @@ const templateService = new TemplateService(prisma);
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verify authentication
@@ -21,7 +21,7 @@ export async function GET(
       return errorResponse('Authentication required', 401);
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return errorResponse('Template ID is required', 400);

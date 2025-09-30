@@ -5,9 +5,9 @@ import { generateSingleSubmissionCsv } from '../../../../../lib/services/export-
 import { ExportOptions } from '../../../../../lib/services/export-service';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
@@ -16,6 +16,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (!session || !session.owner) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { id } = await params;
 
     const { searchParams } = new URL(request.url);
 
@@ -31,7 +33,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     };
 
     // Get the specific submission
-    const submission = await getSubmissionById(params.id, session.owner.id);
+    const submission = await getSubmissionById(id, session.owner.id);
     if (!submission) {
       return NextResponse.json(
         { error: 'Submission not found' },

@@ -4,7 +4,7 @@ import { getSubmissionById } from '../../../../lib/services/submission-query-ser
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -16,8 +16,10 @@ export async function GET(
       );
     }
 
+    const { id } = await params;
+
     // Fetch submission
-    const submission = await getSubmissionById(params.id, session.owner.id);
+    const submission = await getSubmissionById(id, session.owner.id);
 
     if (!submission) {
       return NextResponse.json(

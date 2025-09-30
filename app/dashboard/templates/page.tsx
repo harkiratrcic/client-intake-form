@@ -158,7 +158,11 @@ export default async function TemplatesPage() {
                       <div className="px-4 py-5 sm:p-6">
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                           {templates.map((template) => (
-                            <div key={template.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <Link
+                              key={template.id}
+                              href={`/dashboard/templates/${template.id}`}
+                              className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow block"
+                            >
                               <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                   <h3 className="text-lg font-medium text-gray-900">{template.name}</h3>
@@ -173,15 +177,12 @@ export default async function TemplatesPage() {
                                   </div>
                                 </div>
                                 <div className="ml-4 flex-shrink-0">
-                                  <button className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <span className="sr-only">Edit template</span>
-                                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                                    </svg>
-                                  </button>
+                                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                  </svg>
                                 </div>
                               </div>
-                            </div>
+                            </Link>
                           ))}
                         </div>
                       </div>

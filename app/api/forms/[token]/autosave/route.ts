@@ -4,10 +4,10 @@ import { errorResponse, successResponse, internalErrorResponse } from '@/lib/api
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { token: string } }
+  { params }: { params: Promise<{ token: string }> }
 ) {
   try {
-    const { token } = params;
+    const { token } = await params;
 
     if (!token) {
       return errorResponse('Token is required', 400);
