@@ -67,13 +67,18 @@ export async function middleware(request: NextRequest) {
       );
     }
 
-    // Add user info to headers for downstream handlers
-    const response = NextResponse.next();
+    // Add user info to request headers for downstream handlers
+    const requestHeaders = new Headers(request.headers);
     if (sessionResult.userId) {
-      response.headers.set('x-owner-id', sessionResult.userId);
-      response.headers.set('x-user-email', sessionResult.email || '');
+      requestHeaders.set('x-owner-id', sessionResult.userId);
+      requestHeaders.set('x-user-email', sessionResult.email || '');
     }
-    return response;
+
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   }
 
   // Check if this is a dashboard path (redirect to login if not authenticated)
