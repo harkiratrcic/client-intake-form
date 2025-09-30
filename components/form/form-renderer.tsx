@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TextField } from './fields/text-field';
 import { NumberField } from './fields/number-field';
 import { SelectField, SelectOption } from './fields/select-field';
+import { ArrayField } from './fields/array-field';
 import { validateFormData, ValidationError } from './validation';
 
 export interface FormSchema {
@@ -139,6 +140,7 @@ export function FormRenderer({
     const fieldPath = parentPath ? `${parentPath}.${fieldName}` : fieldName;
     const value = getFieldValue(fieldPath);
     const errors = validation.errors;
+    const fieldUiSchema = uiSchema[fieldName] || {};
 
     switch (fieldSchema.type) {
       case 'string':
@@ -174,7 +176,10 @@ export function FormRenderer({
             description={fieldSchema.description}
             required={schema.required?.includes(fieldName)}
             type={fieldSchema.format === 'email' ? 'email' :
+                  fieldSchema.format === 'date' ? 'date' :
                   fieldSchema.format === 'uri' ? 'url' : 'text'}
+            multiline={fieldUiSchema['ui:widget'] === 'textarea'}
+            rows={fieldUiSchema['ui:rows'] || 3}
             minLength={fieldSchema.minLength}
             maxLength={fieldSchema.maxLength}
             pattern={fieldSchema.pattern}
@@ -184,6 +189,7 @@ export function FormRenderer({
         );
 
       case 'number':
+      case 'integer':
         return (
           <NumberField
             key={fieldPath}
@@ -195,7 +201,23 @@ export function FormRenderer({
             required={schema.required?.includes(fieldName)}
             min={fieldSchema.minimum}
             max={fieldSchema.maximum}
-            step={fieldSchema.step || 1}
+            step={fieldSchema.step || (fieldSchema.type === 'integer' ? 1 : 0.01)}
+            errors={errors}
+            onChange={(newValue) => handleFieldChange(fieldPath, newValue)}
+          />
+        );
+
+      case 'array':
+        return (
+          <ArrayField
+            key={fieldPath}
+            name={fieldPath}
+            label={fieldSchema.title || fieldName}
+            value={Array.isArray(value) ? value : []}
+            itemSchema={fieldSchema.items}
+            required={schema.required?.includes(fieldName)}
+            minItems={fieldSchema.minItems}
+            maxItems={fieldSchema.maxItems}
             errors={errors}
             onChange={(newValue) => handleFieldChange(fieldPath, newValue)}
           />
