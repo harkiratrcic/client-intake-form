@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -62,11 +62,18 @@ const navigation: NavItem[] = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="flex flex-col w-64 bg-white border-r border-gray-200">
+    <div
+      className={`flex flex-col bg-white border-r border-gray-200 transition-all duration-300 ease-in-out ${
+        isExpanded ? 'w-64' : 'w-16'
+      }`}
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+    >
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-1">
+      <nav className="flex-1 px-2 py-6 space-y-1">
         {navigation.map((item) => {
           const isCurrent = pathname === item.href ||
             (item.href !== '/dashboard' && pathname.startsWith(item.href));
@@ -80,27 +87,39 @@ export function Sidebar() {
                   ? 'bg-indigo-100 text-indigo-900'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               }`}
+              title={!isExpanded ? item.name : ''}
             >
               <span
-                className={`mr-3 flex-shrink-0 ${
+                className={`flex-shrink-0 ${
                   isCurrent ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500'
-                }`}
+                } ${isExpanded ? 'mr-3' : ''}`}
               >
                 {item.icon}
               </span>
-              {item.name}
+              <span className={`transition-opacity duration-300 ${
+                isExpanded ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'
+              }`}>
+                {item.name}
+              </span>
             </Link>
           );
         })}
       </nav>
 
       {/* Footer */}
-      <div className="flex-shrink-0 px-4 py-4 border-t border-gray-200">
-        <div className="flex items-center">
-          <div className="text-xs text-gray-500">
+      <div className="flex-shrink-0 px-2 py-4 border-t border-gray-200">
+        <div className={`flex items-center ${isExpanded ? 'px-2' : 'justify-center'}`}>
+          <div className={`text-xs text-gray-500 transition-opacity duration-300 ${
+            isExpanded ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'
+          }`}>
             <p className="font-medium">FormFlow Dashboard</p>
             <p>Version 1.0</p>
           </div>
+          {!isExpanded && (
+            <div className="text-xs text-gray-400 font-medium">
+              F
+            </div>
+          )}
         </div>
       </div>
     </div>
