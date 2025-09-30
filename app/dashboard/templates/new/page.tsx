@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Header } from '../../../../components/dashboard/header';
-import { Sidebar } from '../../../../components/dashboard/sidebar';
 
 export default function NewTemplatePage() {
   const router = useRouter();
@@ -70,29 +68,21 @@ export default function NewTemplatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header owner={{ email: 'owner@test.com' }} />
+    <>
+      <div className="md:flex md:items-center md:justify-between">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+            Create New Template
+          </h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Design a reusable form template for your immigration practice.
+          </p>
+        </div>
+      </div>
 
-      <div className="flex">
-        <Sidebar />
-
-        <main className="flex-1 overflow-y-auto">
-          <div className="py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-              <div className="md:flex md:items-center md:justify-between">
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
-                    Create New Template
-                  </h2>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Design a reusable form template for your immigration practice.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-8">
-                <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-                  <form onSubmit={handleSubmit} className="space-y-6 p-6">
+      <div className="mt-8">
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          <form onSubmit={handleSubmit} className="space-y-6 p-6">
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -244,10 +234,6 @@ export default function NewTemplatePage() {
                   </form>
                 </div>
               </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
+    </>
   );
 }

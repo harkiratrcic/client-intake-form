@@ -1,9 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { redirect, notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { getServerSession } from '../../../../lib/auth/server-session';
-import { Header } from '../../../../components/dashboard/header';
-import { Sidebar } from '../../../../components/dashboard/sidebar';
 import { prisma } from '../../../../lib/prisma';
 
 interface Props {
@@ -13,12 +11,7 @@ interface Props {
 }
 
 export default async function ClientDetailPage({ params }: Props) {
-  // Check authentication
   const session = await getServerSession();
-  if (!session.success) {
-    redirect('/login');
-  }
-
   const { id } = await params;
 
   // Fetch client details
@@ -56,17 +49,9 @@ export default async function ClientDetailPage({ params }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header owner={session.owner} />
-
-      <div className="flex">
-        <Sidebar />
-
-        <main className="flex-1 overflow-y-auto">
-          <div className="py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-              {/* Breadcrumb */}
-              <nav className="flex mb-6" aria-label="Breadcrumb">
+    <>
+      {/* Breadcrumb */}
+      <nav className="flex mb-6" aria-label="Breadcrumb">
                 <ol className="flex items-center space-x-4">
                   <li>
                     <div>
@@ -287,11 +272,7 @@ export default async function ClientDetailPage({ params }: Props) {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
+    </>
   );
 }
 

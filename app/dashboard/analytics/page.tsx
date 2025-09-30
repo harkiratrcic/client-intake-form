@@ -1,28 +1,9 @@
 import React from 'react';
-import { redirect } from 'next/navigation';
-import { getServerSession } from '../../../lib/auth/server-session';
-import { Header } from '../../../components/dashboard/header';
-import { Sidebar } from '../../../components/dashboard/sidebar';
 
 export default async function AnalyticsPage() {
-  // Check authentication
-  const session = await getServerSession();
-  if (!session.success) {
-    redirect('/login');
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header owner={session.owner} />
-
-      <div className="flex">
-        <Sidebar />
-
-        <main className="flex-1 overflow-y-auto">
-          <div className="py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-              <div>
-                <div className="md:flex md:items-center md:justify-between">
+    <>
+      <div className="md:flex md:items-center md:justify-between">
                   <div className="flex-1 min-w-0">
                     <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
                       Analytics
@@ -210,12 +191,7 @@ export default async function AnalyticsPage() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
+    </>
   );
 }
 
